@@ -1,7 +1,6 @@
 import streamlit as st
 import json
 from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 
@@ -16,39 +15,6 @@ def load_data():
 def save_data(data):
     with open('checklist_data.json', 'w') as f:
         json.dump(data, f, indent=4)
-
-# Function to visualize trading history
-def visualize_history(data):
-    # Prepare data for visualization
-    dates = []
-    results = []
-
-    for date_str, day_plan in data.items():
-        trades = day_plan.get('trades', [])
-        for trade in trades:
-            dates.append(datetime.strptime(date_str, '%Y-%m-%d'))
-            result = trade.get('result', '')
-            if result == "Win":
-                results.append(1)
-            elif result == "Loss":
-                results.append(-1)
-            elif result == "Breakeven":
-                results.append(0)
-
-    # Sort data by date
-    sorted_data = sorted(zip(dates, results), key=lambda x: x[0])
-    dates, results = zip(*sorted_data) if sorted_data else ([], [])
-
-    # Plot the data
-    fig, ax = plt.subplots()
-    ax.plot(dates, results, marker='o', linestyle='-', color='blue')
-    ax.axhline(0, color='gray', linestyle='--', linewidth=0.8)
-    ax.set_title('Trading History Overview')
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Result (1=Win, 0=Breakeven, -1=Loss)')
-    ax.grid(True)
-
-    st.pyplot(fig)
 
 # CSS Styling
 st.markdown("""
